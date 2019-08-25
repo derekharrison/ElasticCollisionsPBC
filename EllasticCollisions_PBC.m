@@ -158,7 +158,7 @@ while time < max_t
         end
     end
 
-    %Checking collision time between particles in main domain and east domain
+    %Checking collision time between particles within the main domain
     for n = 1:N
         for i = (n+1):N
             rab = [x(n) - x(i);y(n) - y(i)];
@@ -272,6 +272,10 @@ while time < max_t
             J = Jn*n+Jt*t;
             v_x(coll_partner_1) = J(1)/m+v_x(coll_partner_1);
             v_y(coll_partner_1) = J(2)/m+v_y(coll_partner_1);
+            
+            %Instead of updating V_X of particle n in the mirror domain
+            %and then updating the velocity in the real domain the
+            %velocities of n in the real domain are computed directly
             v_x(coll_partner_2) = -J(1)/m+v_x(coll_partner_2);
             v_y(coll_partner_2) = -J(2)/m+v_y(coll_partner_2);
 
@@ -279,6 +283,10 @@ while time < max_t
 
             Wx(coll_partner_1) = -crossnJ(1)*R/I+Wx(coll_partner_1);
             Wy(coll_partner_1) = -crossnJ(2)*R/I+Wy(coll_partner_1);
+            
+            %Instead of updating W_X of particle n in the mirror domain
+            %and then updating the momenta in the real domain the
+            %momenta of n in the real domain are computed directly
             Wx(coll_partner_2) = -crossnJ(1)*R/I+Wx(coll_partner_2);
             Wy(coll_partner_2) = -crossnJ(2)*R/I+Wy(coll_partner_2);      
 
