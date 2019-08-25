@@ -187,6 +187,7 @@ while time < max_t
         x = x + v_x*coll_time*(1-err);
         y = y + v_y*coll_time*(1-err);
         
+        %Handle periodic boundaries
         for n = 1:N
             if x(n) < W_wall
                 x(n) = x(n) + 2 * L;
@@ -295,6 +296,7 @@ while time < max_t
         x = x + v_x*dt;
         y = y + v_y*dt;
 
+        %Handle periodic boundaries
         for n = 1:N
             if x(n) < W_wall
                 x(n) = x(n) + 2 * L;
@@ -317,7 +319,6 @@ while time < max_t
         frame_counter = frame_counter + 1;
         plot(x,y,'b.','MarkerSize',50)
         hold on
-        %scatter(x,y, 2 * R * 200, 'b', 'filled')
 
         scatter(X(:,E_lab),Y(:,E_lab), 2 * R * 200, 'k', 'filled')
         scatter(X(:,W_lab),Y(:,W_lab), 2 * R * 200, 'k', 'filled')
