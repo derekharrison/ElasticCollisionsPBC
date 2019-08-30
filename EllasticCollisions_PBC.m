@@ -3,17 +3,13 @@
 N = 25;                             %Number of particles in system
 R = 0.2;                            %Radii of the particles
 L = 3.0;                            %Size of periodic domain
-max_vel = 5.0;                     %Max velocity components of the particles
-max_t = 20;                         %Max simulation time
+max_vel = 15.0;                     %Max velocity components of the particles
+max_t = 40;                         %Max simulation time
 dt = 1e-2;                          %Time step size
 m = 1.0;                            %Particle mass
 
-e  = 1.0;                           %Normal restitution coefficient
-mu = 0.00;                          %Friction coefficient
-Bo = 1.0;                           %Coefficient of 
-
 writevideo = true;                  %Generate video of simulation
-show_mirror_domains = false;         %Show mirror domains
+show_mirror_domains = true;         %Show mirror domains
 
 collisions_in_main_domain_counter = 0;
 collisions_with_mirror_domain_counter = 0;
@@ -39,8 +35,6 @@ C_lab = 9;
 err = 1e-8;                         %Small number
 h = L - R - err;                    %Domain limit particle injection
 
-I =2/5*m*R^2;
-
 X = zeros(N,9);
 Y = zeros(N,9);
     
@@ -53,9 +47,9 @@ y = zeros(N,1);
 avg_kin_energy = 0.0;
 
 %Create video
-frameps = 48;                       %Set framerate (fps) for video
+frameps = 32;                       %Set framerate (fps) for video
 if writevideo == true
-    writerObj = VideoWriter('C:\Users\d-w-h\Desktop\Home\Sim_vid_EC_PBC_no_mirror.avi','Motion JPEG AVI');
+    writerObj = VideoWriter('C:\Users\d-w-h\Desktop\Home\Sim_vid_EC_PBC_with_mirror_long_store.avi','Motion JPEG AVI');
     writerObj.FrameRate = frameps;
     open(writerObj);
 end
@@ -64,12 +58,8 @@ end
 v_x = 2*max_vel*rand(N,1) - max_vel;
 v_y = 2*max_vel*rand(N,1) - max_vel;
 
-%Generating initial position of first particle
-x(1) = 2 * h * rand - h;
-y(1) = 2 * h * rand - h;
-
-%Generating initial positions of remaining particles
-for n = 2:N
+%Generating initial positions of particles
+for n = 1:N
     x(n) = 2 * h * rand - h;
     y(n) = 2 * h * rand - h;
     overlap = true;
@@ -98,13 +88,10 @@ end
 avg_kin_energy_pre = avg_kin_energy_pre / N;
 
 %Start simulation code
-%Copying velocity to mirror domains
 time = 0;
 frame_counter = 0;
-inside_failed_coll_counter = 0;
-outside_failed_coll_counter = 0;
 while time < max_t   
-    %Copying velocities and momenta to mirror domains
+    %Copying velocities to mirror domains
     for lab = E_lab:C_lab
         V_X(:,lab) = v_x;
         V_Y(:,lab) = v_y;
@@ -132,15 +119,16 @@ while time < max_t
     X(:,SW_lab) = x - 2 * L;
     Y(:,SW_lab) = y - 2 * L;
 
+    %Initialise collision related info
     coll_partner_1 = 0;
     coll_partner_2 = 0;
     coll_outside_domain = false;
-    coll_time = 1e+10;
     domain_lab = 0;
+    coll_time = 1e+10;
 
     %Checking collision time between particles in main domain and mirror domains
     for n = 1:N
-        for lab = 1:8
+        for lab = E_lab:SE_lab
             for i = 1:N
                 if i ~= n
                     rab = [x(n) - X(i, lab);y(n) - Y(i, lab)];
@@ -257,12 +245,11 @@ while time < max_t
             vb = [V_X(coll_partner_2, domain_lab);V_Y(coll_partner_2, domain_lab)];              
             n = (ra-rb)/sqrt((ra-rb)'*(ra-rb));
             
+            del_v = n*((va - vb)'*n);
+            
             %Instead of updating V_X of particle n in the mirror domain
             %and then updating the velocity in the real domain the
-            %velocities of n in the real domain are computed directly          
-            
-            del_v = n*((va - vb)'*n);
-
+            %velocities of n in the real domain are computed directly                      
             v_x(coll_partner_1) = v_x(coll_partner_1) - del_v(1);
             v_y(coll_partner_1) = v_y(coll_partner_1) - del_v(2);
             v_x(coll_partner_2) = v_x(coll_partner_2) + del_v(1);
@@ -374,11 +361,6 @@ while time < max_t
         end
     end
     there_is_overlap;
-    
-    %domain_lab
-    %coll_partner_1
-    %coll_partner_2
-
 end
 
 collisions_in_main_domain_counter
