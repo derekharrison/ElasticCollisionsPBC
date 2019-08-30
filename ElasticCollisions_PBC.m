@@ -49,7 +49,7 @@ avg_kin_energy = 0.0;
 %Create video
 frameps = 32;                       %Set framerate (fps) for video
 if writevideo == true
-    writerObj = VideoWriter('C:\Users\d-w-h\Desktop\Home\Sim_vid_EC_PBC_with_mirror_long_store.avi','Motion JPEG AVI');
+    writerObj = VideoWriter('C:\Users\d-w-h\Desktop\Home\Sim_vid_EC_PBC_with_mirror_long_store_2.avi','Motion JPEG AVI');
     writerObj.FrameRate = frameps;
     open(writerObj);
 end
