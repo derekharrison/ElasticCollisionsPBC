@@ -1,4 +1,4 @@
-%Brownian Motion with Periodic boundary conditions
+%Elastic collisions with Periodic boundary conditions
 
 N = 25;                             %Number of particles in system
 R = 0.2;                            %Radii of the particles
