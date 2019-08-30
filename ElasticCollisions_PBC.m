@@ -1,5 +1,6 @@
 %Elastic collisions with Periodic boundary conditions
 
+%Simulation parameters
 N = 25;                             %Number of particles in system
 R = 0.2;                            %Radii of the particles
 L = 3.0;                            %Size of periodic domain
@@ -10,9 +11,6 @@ m = 1.0;                            %Particle mass
 
 writevideo = true;                  %Generate video of simulation
 show_mirror_domains = true;         %Show mirror domains
-
-collisions_in_main_domain_counter = 0;
-collisions_with_mirror_domain_counter = 0;
 
 %Initialization
 E_wall = L;
@@ -45,6 +43,9 @@ x = zeros(N,1);
 y = zeros(N,1);
 
 avg_kin_energy = 0.0;
+
+collisions_in_main_domain_counter = 0;
+collisions_with_mirror_domain_counter = 0;
 
 %Create video
 frameps = 32;                       %Set framerate (fps) for video
