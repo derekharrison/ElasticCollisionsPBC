@@ -68,7 +68,7 @@ for n = 1:N
         for i = 1:(n-1)
             dx = x(i) - x(n);
             dy = y(i) - y(n);
-            if dx*dx + dy*dy < (1 + err)*(2*R)*(2*R)
+            if dx*dx + dy*dy < (2*R)*(2*R)
                 overlap = true;
             end
         end
